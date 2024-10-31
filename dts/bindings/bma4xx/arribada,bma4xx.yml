@@ -1,0 +1,6 @@
+# description: |
+#   BMA 400 driver
+
+# compatible: bosch,bma4xx
+
+# include: [sensor-device.yaml, i2c-device.yaml]
