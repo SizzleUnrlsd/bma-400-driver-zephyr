@@ -1,0 +1,28 @@
+
+/*
+ * Copyright (c) 2020 Richard Osterloh <richard.osterloh@gmail.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+ / {
+	linkit_j5_connector: connector {
+		compatible = "linkit-j5-connector";
+		#gpio-cells = <2>;
+		gpio-map-mask = <0xffffffff 0xffffffc0>;
+		gpio-map-pass-thru = <0 0x3f>;
+		gpio-map = <0 0 &gpio0 26 0>,	/* TX */
+			   <1 0 &gpio0 14 0>,	/* RX */
+			   <2 0 &gpio0 16 0>,	/* CTS */
+			   <3 0 &gpio0 20 0>,	/* RTS */
+			   <4 0 &gpio1 14 0>,	/* GPIO1 */
+			   <5 0 &gpio1 13 0>,	/* GPIO2 */
+			   <6 0 &gpio1 1 0>;	/* GPIO3 */
+	};
+};
+
+linkit_serial: &uart1 {};
+//linkit_gnss_serial: &uart0 {};
+linkit_ext_i2c: &i2c0 {};
+//linkit_i2c: &i2c1 {};
+//linkit_sat_spi: &spi2 {};

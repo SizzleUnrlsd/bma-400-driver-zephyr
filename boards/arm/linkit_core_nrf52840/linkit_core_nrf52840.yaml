@@ -1,0 +1,20 @@
+identifier: linkit_core_nrf52840
+name: Linkit Core NRF52840 CLS/Arribada
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+  - xtools
+supported:
+  - adc
+  - usb_device
+  - usb_cdc
+  - ble
+  - watchdog
+  - counter
+  - in-i2c
+  - ext-i2c
+  - linkit_serial
+  - linkit_i2c
+vendor: arribada

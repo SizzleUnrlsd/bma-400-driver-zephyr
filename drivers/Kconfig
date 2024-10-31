@@ -1,0 +1,8 @@
+# Copyright (c) 2024 Eve Redero
+# SPDX-License-Identifier: Apache-2.0
+
+menu "Drivers"
+    # rsource "nrf24l01/Kconfig"
+    rsource "bma4xx/Kconfig"
+    # rsource "sensor/Kconfig"
+endmenu

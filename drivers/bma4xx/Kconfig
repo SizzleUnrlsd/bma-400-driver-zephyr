@@ -1,0 +1,17 @@
+menuconfig BMA4XX
+    bool "Enable BMA4XX"
+    depends on CONFIG_UART_INTERRUPT_DRIVEN
+    default y
+    select I2C
+    help
+	    BMA 4XX sensor from I2C
+
+config BMA_400
+    bool "Enable bma 400 peripheral"
+    depends on UART_INTERRUPT_DRIVEN
+
+if BMA_400
+    module = BMA_400
+    module-str = bma 400
+    source "subsys/logging/Kconfig.template.log_config"
+endif

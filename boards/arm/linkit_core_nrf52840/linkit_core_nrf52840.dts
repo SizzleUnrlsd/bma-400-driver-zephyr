@@ -1,0 +1,266 @@
+/*
+ * Copyright (c) 2020 Tobias Svehagen
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+ /dts-v1/;
+ #include <nordic/nrf52840_qiaa.dtsi>
+ #include "linkit_connector.dtsi"
+ #include "linkit_core_nrf52840-pinctrl.dtsi"
+ #include <zephyr/dt-bindings/input/input-event-codes.h>
+ / {
+     model = "Linkit Core nRF52840 CLS";
+     compatible = "arribada,linkit-core-nrf52840";
+ 
+     chosen {
+         zephyr,console = &uart1;
+         zephyr,shell-uart = &uart1;
+         //zephyr,uart-mcumgr = &uart1;
+         //zephyr,bt-mon-uart = &uart1;
+         //zephyr,bt-c2h-uart = &uart1;
+         zephyr,sram = &sram0;
+         zephyr,flash = &flash0;
+         zephyr,code-partition = &slot0_partition;
+         zephyr,ieee802154 = &ieee802154;
+     };
+ 
+     leds {
+         compatible = "gpio-leds";
+         led0: led_0 {
+             gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+             label = "Green LED";
+         };
+         led1: led_1 {
+             gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+             label = "Red LED";
+         };
+         led2: led_2 {
+             gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+             label = "Blue LED";
+         };
+     };
+     
+     gpio_keys {
+         compatible = "gpio-keys";
+         reed_switch: reed_switch {
+             gpios = <&gpio1 3 (GPIO_ACTIVE_HIGH)>;
+             label = "Reed Switch";
+         };
+         sensors_pwr: sensors_pwr {
+             gpios = <&gpio0 25 (GPIO_ACTIVE_HIGH)>;
+             label = "Sensors power";
+         };
+         gps_pwr: gps_pwr {
+             gpios = <&gpio1 10 (GPIO_ACTIVE_HIGH)>;
+             label = "GPS Power";
+         };
+         gps_int: gps_int {
+             gpios = <&gpio1 11 (GPIO_ACTIVE_HIGH)>;
+             label = "GPS interrupt";
+         };
+         gps_timepulse: gps_timepulse {
+             gpios = <&gpio0 29 (GPIO_ACTIVE_HIGH)>;
+             label = "GPS Timepulse synchronisation";
+         };
+         gps_rst: gps_rst {
+             gpios = <&gpio1 14 (GPIO_ACTIVE_HIGH)>;
+             label = "GPS reset";
+         };
+         smd_pwr: smd_pwr {
+             gpios = <&gpio1 15 (GPIO_ACTIVE_HIGH)>;
+             label = "Sat SMD Power";
+         };
+     };
+ 
+     vbatt {
+         status = "disabled";
+         compatible = "voltage-divider";
+         io-channels = <&adc 0>;
+         output-ohms = <100000>;
+         full-ohms = <(100000 + 100000)>;
+     };
+ 
+     aliases {
+         ledg = &led0;
+         ledr = &led1;
+         ledb = &led2;
+         watchdog0 = &wdt0;
+         spi-flash0 = &is25lp128f;
+         artic-spi = &spi2;
+         ext-i2c = &i2c0;
+         in-i2c = &i2c1;
+         uart-gnss = &uart0;
+         uart-log = &uart1;
+         reed-switch = &reed_switch;
+         sensors-pwr = &sensors_pwr;
+         gps-pwr = &gps_pwr;
+         smd-pwr = &smd_pwr;
+         gps-int = &gps_int;
+         gps-timepulse = &gps_timepulse;
+         gps-rst = &gps_rst;
+         accel0 = &bma4xx;
+     };
+ };
+ 
+ &adc {
+     status = "okay";
+ };
+ 
+ &gpiote {
+     status = "okay";
+ };
+ 
+ &gpio0 {
+     status = "okay";
+ };
+ 
+ &gpio1 {
+     status = "okay";
+     interrupts = <1 NRF_DEFAULT_IRQ_PRIORITY>;
+     reed-switch-gpios {
+         gpio-hog;
+         gpios = <3 GPIO_ACTIVE_HIGH>;
+         input;
+     };
+ };
+ 
+ &uart0 {
+     compatible = "nordic,nrf-uart";
+     status = "okay";
+     current-speed = <9600>;
+     pinctrl-0 = <&uart0_default>;
+     pinctrl-1 = <&uart0_sleep>;
+     pinctrl-names = "default", "sleep";
+ };
+ 
+ &uart1 {
+     //compatible = "nordic,nrf-uart";
+     status = "okay";
+     current-speed = <115200>;
+     pinctrl-0 = <&uart1_default>;
+     pinctrl-1 = <&uart1_sleep>;
+     pinctrl-names = "default", "sleep";
+ };
+ 
+ &i2c0 {
+     compatible = "nordic,nrf-twi";
+     status = "okay";
+     //clock-frequency = <I2C_BITRATE_FAST>;
+     pinctrl-0 = <&i2c0_default>;
+     pinctrl-1 = <&i2c0_sleep>;
+     pinctrl-names = "default", "sleep";
+ };
+ 
+ &i2c1 {
+     // compatible = "nordic,nrf-twi";
+     status = "okay";
+     // clock-frequency = <I2C_BITRATE_FAST>;
+     pinctrl-0 = <&i2c1_default>;
+     pinctrl-1 = <&i2c1_sleep>;
+     pinctrl-names = "default", "sleep";
+     bma4xx: bma4xx@15 {
+         status = "okay";
+         compatible = "bosch,bma4xx";
+         reg = <0x15>;
+         int1-gpios = <&gpio1 2 (GPIO_ACTIVE_HIGH)>;
+         supply-gpios = <&gpio0 25 (GPIO_ACTIVE_HIGH)>;
+         friendly-name = "BMA400";
+         label = "BMA400";
+     };
+ };
+ 
+     &spi2 {
+     compatible = "nordic,nrf-spi";
+     status = "okay";
+     pinctrl-0 = <&spi2_default>;
+     pinctrl-1 = <&spi2_sleep>;
+     pinctrl-names = "default", "sleep";
+ };
+ 
+ &qspi {
+     status = "okay";
+     pinctrl-0 = <&qspi_default>;
+     pinctrl-1 = <&qspi_sleep>;
+     pinctrl-names = "default", "sleep";
+ 
+     is25lp128f: is25lp128f@0 {
+         compatible = "nordic,qspi-nor";
+         reg = <0>;
+         writeoc = "pp4o";
+         readoc = "read4io";
+         sck-frequency = <32000000>;
+         // sfdp-bfp = [
+         // e5 20 f1 ff  ff ff ff 03  44 eb 08 6b  08 3b 04 bb
+         // ee ff ff ff  ff ff 00 ff  ff ff 00 ff  0c 20 0f 52
+         // 10 d8 00 ff  23 72 f5 00  82 ed 04 cc  44 83 68 44
+         // 30 b0 30 b0  f7 c4 d5 5c  00 be 29 ff  f0 d0 ff ff
+         // ];
+         quad-enable-requirements = "S1B6";
+         jedec-id = [9d 60 18];
+         size = <134217728>;
+         has-dpd;
+         t-enter-dpd = <3000>;
+         t-exit-dpd = <5000>;
+     };
+ };
+ &flash0 {
+     partitions {
+         compatible = "fixed-partitions";
+         #address-cells = <1>;
+         #size-cells = <1>;
+ 
+         boot_partition: partition@0 {
+             label = "mcuboot";
+             reg = <0x00000000 0x0000C000>;
+         };
+         slot0_partition: partition@c000 {
+             label = "image-0";
+             reg = <0x0000C000 0x00067000>;
+         };
+         slot1_partition: partition@73000 {
+             label = "image-1";
+             reg = <0x00073000 0x00067000>;
+         };
+         scratch_partition: partition@da000 {
+             label = "image-scratch";
+             reg = <0x000da000 0x0001e000>;
+         };
+         storage_partition: partition@f8000 {
+             label = "storage";
+             reg = <0x000f8000 0x00008000>;
+         };
+     };
+ };
+ /* /delete-node/ &storage_partition;
+ &is25lp128f {
+     partitions {
+         compatible = "fixed-partitions";
+         #address-cells = <1>;
+         #size-cells = <1>;partition@40000 {
+             label = "storage";
+             reg = <0x00040000 0x00020000>;
+         };
+     };
+ };
+ 
+  */
+ 
+ &ieee802154 {
+     status = "okay";
+ };
+ 
+ zephyr_udc0: &usbd {
+     compatible = "nordic,nrf-usbd";
+     status = "okay";
+ };
+ 
+&linkit_j5_connector {
+	gpio-map = <0 0 &gpio0 26 0>,
+			   <1 0 &gpio0 14 0>,
+			   <2 0 &gpio0 16 0>,
+			   <3 0 &gpio0 20 0>,
+			   <4 0 &gpio1 14 0>,
+			   <5 0 &gpio1 13 0>,
+			   <6 0 &gpio1 1 0>;
+};
