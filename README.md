@@ -1,4 +1,4 @@
-# Zephyr out-of-tree driver for nRF24L01 SPI 2.4GHz remote control module
+# Zephyr out-of-tree driver for BMA4xx
 
 This repository contains a Zephyr out-of-tree driver.
 
