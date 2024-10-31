@@ -22,6 +22,6 @@ manifest:
           - hal_stm32  # required by the nucleo board (STM32 based)
           - hal_espressif  # required by the esp32 board (ESP32 based)
 
-    - name: linkit_core_nrf52840
-      path: boards/arm/linkit_core_nrf52840
-      revision: main
+    # - name: linkit_core_nrf52840
+    #   path: boards/arm/linkit_core_nrf52840
+    #   revision: main
