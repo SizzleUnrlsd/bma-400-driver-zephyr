@@ -28,7 +28,7 @@ command:
 
 ```shell
 # initialize my-workspace for the example-application (main branch)
-west init -m https://github.com/everedero/driver_nrf24l01 --mr main my-workspace
+west init -m https://github.com/SizzleUnrlsd/bma-400-driver-zephyr --mr main my-workspace
 # update Zephyr modules
 cd my-workspace
 west update
@@ -46,9 +46,7 @@ west build -b $BOARD -p always app -- -DOVERLAY_CONFIG=prj.conf
 
 where `$BOARD` is the target board.
 ```shell
-BOARD="nucleo_f756zg"
-BOARD="nrf52dk_nrf52832"
-BOARD="esp32_devkitc_wroom"
+BOARD="linkit_core_nrf52840"
 ```
 
 In order to activate debug logs:
